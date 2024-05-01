@@ -4,7 +4,7 @@ O Projeto Ecommerce FullStack Angular and Spring Boot
 
 ## Obs: o projeto está em andamento
 
- <img src="./exempleService/src/assets/angular.gif" alt="aprensentação do projeto">
+ <img src="assets/angular.gif" alt="aprensentação do projeto">
 
 
 ## Tecnologias utilizadas Frontend
