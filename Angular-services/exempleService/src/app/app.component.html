@@ -10,20 +10,8 @@
         />
       </a>
     </div>
-    <div class="menu-sidebar-content js-scrollbar1">
-      <nav class="navbar-sidebar">
-        <ul class="list-unstyled navbar-list">
-          <li>
-            <a routerLink="/category/1" routerLinkActive="active-link">Books</a>
-          </li>
-          <li>
-            <a routerLink="/category/2" routerLinkActive="active-link">Coffee Mugs</a>
-          </li>
-          <li></li>
-        </ul>
-      </nav>
-    </div>
-  </aside>
+
+    <app-product-category-menu></app-product-category-menu>
   <!-- END MENU SIDEBAR-->
 
   <div class="page-container">
@@ -57,8 +45,6 @@
     <!-- MAIN CONTENT-->
     <router-outlet></router-outlet>
   </div>
-</div>
-
 <!-- ENDS PAGE CONTAINER -->
 
 <footer>
