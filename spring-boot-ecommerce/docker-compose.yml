@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql-compose:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ecommerce
+    ports:
+      - "3306:3306"
+    volumes:
+      - /home/mysql/Docker-Compose/MySQL:/var/lib/mysql
+    networks:
+      - mysql-compose-network
+      
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mysql@mysql.com
+      PGADMIN_DEFAULT_PASSWORD: 1234567
+    ports:
+      - "5050:80"
+    depends_on:
+      - mysql-compose
+    networks:
+      - mysql-compose-network
+
+networks: 
+  mysql-compose-network:
+    driver: bridge
