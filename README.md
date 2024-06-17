@@ -39,5 +39,5 @@ O Projeto Ecommerce FullStack Angular and Spring Boot
 ```
 
 ## Aprendizados
-Este projeto está me proporcionando a oportunidade de aprimorar minhas habilidades na criação de APIs, fornecendo controladores para que meu frontend faça as requisições necessárias.
+Este projeto está me proporcionando a oportunidade de aprimorar minhas habilidades na criação de APIs, fornecendo controladores para que meu frontend faça as requisições necessárias  e meu frontend  crie  as telas nescessarias para usuário ter a interatividade  !
 
