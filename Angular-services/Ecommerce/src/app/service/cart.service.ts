@@ -28,8 +28,10 @@ export class CartService {
     if (this.cartItems.length > 0) {
       // find the item in the cart based on item id
 
-      existingCartItem = this.cartItems.find( tempCartItem => tempCartItem.id === theCartItem.id);
-     /* for (let tempCartItem of this.cartItems) {
+      existingCartItem = this.cartItems.find(
+        (tempCartItem) => tempCartItem.id === theCartItem.id
+      );
+      /* for (let tempCartItem of this.cartItems) {
         if (tempCartItem.id === theCartItem.id) {
           existingCartItem = tempCartItem;
           break;
@@ -83,6 +85,29 @@ export class CartService {
     );
     console.log('------');
   }
+
+  decrementQuantity(theCartItem: CartItem) {
+    theCartItem.quantity--;
+
+    if (theCartItem.quantity === 0) {
+      this.remove(theCartItem);
+    } else {
+      this.computeCartTotals();
+    }
+  }
+  remove(theCartItem: CartItem) {
+    // get index of item in the array
+    const itemIndex = this.cartItems.findIndex(
+      (tempCartItem) => tempCartItem.id === theCartItem.id
+    );
+
+    // if found, remove the item from the array at the given index
+    if (itemIndex > -1) {
+      this.cartItems.splice(itemIndex, 1);
+
+      this.computeCartTotals();
+    }
+  }
 }
 /*Propriedades:
 
@@ -133,3 +158,71 @@ Chamada de logCartData():
 
 Após calcular os totais, chama o método logCartData() para registrar os detalhes do carrinho no console, incluindo o nome,
  quantidade, preço unitário e subtotal de cada item, bem como o preço total e a quantidade total. */
+
+/*-------------------------------------------------------------------------------------------------------------------
+ Os métodos decrementQuantity e remove que você tem em Angular estão relacionados à manipulação de itens em um carrinho de compras. Vamos explicar cada um deles:
+
+Método decrementQuantity(theCartItem: CartItem)
+Este método é responsável por reduzir a quantidade de um item específico no carrinho. Aqui está o que cada parte faz:
+
+Decrementa a quantidade:
+
+typescript
+Copiar código
+theCartItem.quantity--;
+Isso simplesmente diminui a quantidade do item theCartItem em 1 unidade.
+
+Verifica se a quantidade é zero:
+
+typescript
+Copiar código
+if (theCartItem.quantity === 0) {
+  this.remove(theCartItem);
+}
+Após diminuir a quantidade, verifica se ela chegou a zero. Se sim, chama o método remove(theCartItem) para remover completamente o item do carrinho.
+
+Atualiza totais do carrinho:
+
+typescript
+Copiar código
+else {
+  this.computeCartTotals();
+}
+Se a quantidade não for zero, significa que ainda há itens no carrinho, então o método computeCartTotals() é chamado para recalcular os totais do carrinho, como subtotal, impostos, e total geral.
+
+Método remove(theCartItem: CartItem)
+Este método é chamado quando um item precisa ser removido completamente do carrinho. Aqui está o que ele faz:
+
+Encontra o índice do item no array cartItems:
+
+typescript
+Copiar código
+const itemIndex = this.cartItems.findIndex( tempCartItem => tempCartItem.id === theCartItem.id)
+Utiliza findIndex para encontrar o índice do item dentro do array cartItems onde o id do item corresponde ao id do theCartItem.
+
+Remove o item se encontrado:
+
+typescript
+Copiar código
+if (itemIndex > -1) {
+  this.cartItems.splice(itemIndex, 1);
+}
+Verifica se o itemIndex é maior que -1 (ou seja, se o item foi encontrado no array). Se encontrado, utiliza splice para remover o item do array cartItems.
+
+Atualiza totais do carrinho:
+
+typescript
+Copiar código
+this.computeCartTotals();
+Após remover o item do carrinho, chama computeCartTotals() para recalcular os totais do carrinho, garantindo que os totais reflitam a remoção do item.
+
+Considerações
+Esses métodos são partes essenciais de um sistema de carrinho de compras em Angular. Eles permitem adicionar lógica para manipular itens individuais (como decrementar a quantidade) e para remover itens por completo do carrinho, garantindo que os totais sejam sempre atualizados conforme as ações do usuário. Certifique-se de que CartItem e computeCartTotals() estão devidamente definidos e implementados no seu código para que esses métodos funcionem corretamente.
+
+
+
+
+
+
+
+ */
