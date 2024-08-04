@@ -40,7 +40,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
  * 
  * @Param("name") String name: Este parâmetro indica que o método espera um
  * parâmetro chamado name do tipo String. Esse parâmetro é usado como critério
- * de filtro para buscar entidades Product cujo nome contenha o valor
+ * de filtro para buscar entidades Product cujo nome contenha o valorWQQW
  * especificado.
  * 
  * Pageable pageable: O parâmetro Pageable é usado para controlar a paginação e

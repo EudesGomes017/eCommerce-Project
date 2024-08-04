@@ -514,7 +514,7 @@ input.au-input.au-input-xl{
   background:#fff
 }
 .main-content.page-m{
-  padding:10% 15%!important
+  padding:10% 30% 10% 5%
 }
 
 /*
@@ -629,8 +629,8 @@ input.au-input.au-input-xl{
   width:22px;
   background-color:#fff!important;
   border:2px solid #e5e5e5;
-  -webkit-border-radius:2px;
-  -moz-border-radius:2px;
+  -webkit-border-radius:2px;/* webkit é um prefixo usado para navegadores baseados no WebKit, como o Safari e versões antigas do Chrome.*/
+  -moz-border-radius:2px;/*Prefixo: -moz- é um prefixo usado para navegadores baseados no Gecko, como o Firefox.*/
   border-radius:2px
 }
 .au-checkbox:hover input~.au-checkmark{
