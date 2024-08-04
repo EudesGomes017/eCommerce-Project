@@ -17,8 +17,11 @@ import { ProductCategoryMenuComponent } from './components/product-category-menu
 
 import { RouterModule, Routes } from '@angular/router';
 import { SearchComponent } from './components/search/search.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
+  { path: 'checkout', component: CheckoutComponent },
   { path: 'cart-details', component: CartDetailsComponent },
   { path: 'products/:id', component: ProductsDatailsComponent },
   { path: 'search/:keyword', component: ProductListComponent },
@@ -38,12 +41,14 @@ const routes: Routes = [
     ProductsDatailsComponent,
     CartStatusComponent,
     CartDetailsComponent,
+    CheckoutComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
     NgbModule,
+    ReactiveFormsModule
   ],
   providers: [ProductService],
   bootstrap: [AppComponent],
