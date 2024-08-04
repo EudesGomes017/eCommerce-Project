@@ -24,17 +24,12 @@ O Projeto Ecommerce FullStack Angular and Spring Boot
 
           <!-- loop over ther collection of products -->
           <div *ngFor="let tempProduct of products" class="col-md-3">
-
             <div class="product-box">
               <img src="{{ tempProduct.imageUrl}}" class="img-responsive">
               <h1>{{tempProduct.name}}</h1>
               <div class="price">{{tempProduct.unitPrice | currency:'USD'}}</div>
               <a href="#" class="primary-btn">Add to cart</a>
-
-
-
-            </div>
-
+             </div>
           </div>
 ```
 
