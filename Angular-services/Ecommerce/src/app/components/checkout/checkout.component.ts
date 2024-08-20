@@ -1,6 +1,10 @@
+import { ShopFormService } from './../../service/shop-form.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs';
+import { Country } from 'src/app/common/country';
+import { State } from 'src/app/common/state';
+import { ShopValidators } from 'src/app/validators/shop-validators';
 
 @Component({
   selector: 'app-checkout',
@@ -8,12 +12,24 @@ import { first } from 'rxjs';
   styleUrls: ['./checkout.component.css'],
 })
 export class CheckoutComponent implements OnInit {
+
   checkoutFormGrup!: FormGroup;
 
   totalPrice: number = 0;
   totalQuantity: number = 0;
 
-  constructor(private formBuilder: FormBuilder) {}
+  creditCardYears: number[] = [];
+  creditCardMonths: number[] = [];
+
+  countries: Country[] = []
+
+  shippingAddressStates: State[] = [];
+  billingAddressStates: State[] = [];
+
+
+
+
+  constructor(private formBuilder: FormBuilder, private shopFormService: ShopFormService) { }
 
   ngOnInit(): void {
     this.formsEvent();
@@ -22,9 +38,10 @@ export class CheckoutComponent implements OnInit {
   formsEvent() {
     this.checkoutFormGrup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        email: [''],
+        firstName: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        lastName: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        email: new FormControl('',
+          [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])
       }),
 
       shippingAddress: this.formBuilder.group({
@@ -52,22 +69,131 @@ export class CheckoutComponent implements OnInit {
         expirationYear: [''],
       }),
     });
+
+
+    // populate credit card months
+    const startMonth: number = new Date().getMonth() + 1;
+    console.log("startMonth: " + startMonth)
+
+    this.shopFormService.getCreditCardMonths(startMonth).subscribe(
+      data => {
+        console.log("Retrieved credit card months: " + JSON.stringify(data));
+        this.creditCardMonths = data;
+      }
+    )
+
+    // populate credit card years
+
+    this.shopFormService.getCreditCardYears().subscribe(
+      data => {
+        console.log("Retrieved credit card year: " + JSON.stringify(data));
+        this.creditCardYears = data;
+
+      }
+    )
+
+
+    // populate coountries
+    this.shopFormService.getCountries().subscribe(
+      data => {
+        console.log("Retrieved countries: " + JSON.stringify(data));
+        this.countries = data;
+      }
+    )
   }
 
   onSubmit() {
     console.log('Handling the submit button');
-    console.log(this.checkoutFormGrup.get('customer')?.value);
+
+    if (this.checkoutFormGrup.invalid) {
+      this.checkoutFormGrup.markAllAsTouched();
+    }
+    console.log(this.checkoutFormGrup.get('customer')!.value);
+
+    console.log("The email address is " + this.checkoutFormGrup.get('customer')!.value.email);
+    console.log("The shipping address counry is " + this.checkoutFormGrup.get('shippingAddress')!.value.country.name);
+    console.log("The shipping address state is " + this.checkoutFormGrup.get('shippingAddress')!.value.state.name);
+  }
+
+  get firstName() {
+    return this.checkoutFormGrup.get('customer.firstName');
+  }
+  get lastName() {
+    return this.checkoutFormGrup.get('customer.lastName');
+  }
+  get email() {
+    return this.checkoutFormGrup.get('customer.email');
   }
 
   copyShippingAddressToBillingAddress(event: Event) {
     if ((event.target as HTMLInputElement).checked) {
       this.checkoutFormGrup.controls['billingAddress'].setValue(
-        this.checkoutFormGrup.controls['shippingAddress'].value
-      );
+        this.checkoutFormGrup.controls['shippingAddress'].value);
+
+      //Fix for states
+      this.billingAddressStates = this.shippingAddressStates;
+
     } else {
       this.checkoutFormGrup.controls['billingAddress'].reset();
+
+      this.billingAddressStates = [];
     }
   }
+
+  handleMonthsAndYears() {
+
+    const creditCardFormGroup = this.checkoutFormGrup.get('creditCard');
+
+    const currentYear: number = new Date().getFullYear();
+    const selectedYear: number = Number(creditCardFormGroup!.value.expirationYear);
+
+
+    // if the current year equals the selected year, then start with the current month
+
+    let startMonth: number;
+
+    if (currentYear === selectedYear) {
+      startMonth = new Date().getMonth() + 1;
+
+    }
+    else {
+      startMonth = 1;
+    }
+
+    this.shopFormService.getCreditCardMonths(startMonth).subscribe(
+      data => {
+        console.log("Retrieved credit card months: " + JSON.stringify(data));
+        this.creditCardMonths = data;
+      }
+    )
+
+
+
+  }
+
+  getState(formGroupName: string) {
+
+    const formGroup = this.checkoutFormGrup.get(formGroupName);
+
+    const countryCode = formGroup!.value.country.code;
+    const countryName = formGroup!.value.country.name;
+
+    console.log(`${formGroupName} country code: ${countryCode}`);
+    console.log(`${formGroupName} country name: ${countryName}`);
+
+    this.shopFormService.getStates(countryCode).subscribe(data => {
+      if (formGroupName === 'shippingAddress') {
+        this.shippingAddressStates = data;
+      }
+      else {
+        this.billingAddressStates = data;
+      }
+
+      formGroup!.get('state')!.setValue(data[0])
+    }
+    );
+  }
+
 }
 
 
@@ -210,8 +336,65 @@ Verifica se a caixa de seleção (event.target) está marcada usando (event.targ
 Se marcada, copia o valor do endereço de envio (shippingAddress) para o endereço de cobrança (billingAddress).
 Se desmarcada, reseta os campos do endereço de cobrança para os valores padrão (vazios).
 Resumo
-O CheckoutComponent é um componente Angular que gerencia um formulário de checkout. Ele utiliza o serviço FormBuilder para criar um formulário reativo com múltiplos grupos de controle. A classe define métodos para inicializar o formulário, manipular a submissão e copiar o endereço de envio para o endereço de cobrança, além de manipular o ciclo de vida do componente usando o ngOnInit.
+O CheckoutComponent é um componente Angular que gerencia um formulário de checkout. Ele utiliza o serviço FormBuilder para criar um formulário
+reativo com múltiplos grupos de controle. A classe define métodos para inicializar o formulário, manipular a submissão e copiar o endereço de envio para o endereço de cobrança, além de manipular o ciclo de vida do componente usando o ngOnInit.
+
+-----------------------------------------------------------------------------------------------
 
 
+
+Explicação Detalhada:
+Obtenção do Formulário de Cartão de Crédito:
+
+typescript
+Copiar código
+const creditCardFormGroup = this.checkoutFormGrup.get('creditCard');
+Aqui, você está acessando o formulário de cartão de crédito (creditCard) dentro de um grupo de formulários (checkoutFormGrup). O método get
+é
+usado para recuperar o controle do formulário associado ao nome 'creditCard'.
+
+Obtendo o Ano Atual e o Ano Selecionado:
+
+typescript
+Copiar código
+const currentYear: number = new Date().getFullYear();
+const selectedYear: number = Number(creditCardFormGroup!.value.expirationYear);
+currentYear: Obtém o ano atual usando o objeto Date do JavaScript.
+selectedYear: Obtém o ano de expiração selecionado do valor do controle do formulário. A conversão para Number é feita para garantir que
+selectedYear seja um número.
+Definição do Mês de Início:
+
+typescript
+Copiar código
+let startMonth: number;
+
+if (currentYear === selectedYear) {
+  startMonth = new Date().getMonth() + 1;
+}
+else {
+  startMonth = 1;
+}
+Se o ano atual (currentYear) é igual ao ano selecionado (selectedYear), define startMonth como o mês atual (obtido com getMonth() + 1, já que o
+s meses no JavaScript são baseados em zero).
+Se o ano atual não é igual ao ano selecionado, define startMonth como 1 (janeiro), assumindo que para anos futuros, qualquer mês é aceitável.
+Chamada ao Serviço para Obter os Meses Disponíveis:
+
+typescript
+Copiar código
+this.shopFormService.getCreditCardMonths(startMonth).subscribe(
+  data => {
+    console.log("Retrieved credit card months: " + JSON.stringify(data));
+    this.creditCardMonths = data;
+  }
+)
+getCreditCardMonths(startMonth): Chama um método no serviço (shopFormService) para obter os meses de expiração do cartão de crédito a partir do
+mês de início definido.
+.subscribe(data => { ... }): Assina a Observable retornada pelo serviço para lidar com a resposta assíncrona. Quando os dados são recebidos,
+eles são logados no console e atribuídos à propriedade creditCardMonths do componente.
+Resumo:
+Esse método handleMonthsAndYears ajusta a lista de meses disponíveis para o usuário selecionar com base no ano de expiração do cartão de
+crédito que foi inserido no formulário. Se o ano selecionado for o ano atual, ele começa a lista a partir do mês atual. Caso contrário, ele
+começa do mês de janeiro. Após definir o mês de início, ele solicita os meses disponíveis através de um serviço e atualiza a lista no
+componente com os dados recebidos.
 
  */
