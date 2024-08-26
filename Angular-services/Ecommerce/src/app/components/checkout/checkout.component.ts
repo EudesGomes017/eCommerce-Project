@@ -26,9 +26,6 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
-
-
-
   constructor(private formBuilder: FormBuilder, private shopFormService: ShopFormService) { }
 
   ngOnInit(): void {
@@ -45,26 +42,26 @@ export class CheckoutComponent implements OnInit {
       }),
 
       shippingAddress: this.formBuilder.group({
-        street: [''],
-        city: [''],
-        state: [''],
-        country: [''],
-        zipCode: [''],
+        street: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        city: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        state: new FormControl('', [Validators.required]),
+        country: new FormControl('', [Validators.required]),
+        zipCode: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
       }),
 
       billingAddress: this.formBuilder.group({
-        street: [''],
-        city: [''],
-        state: [''],
-        country: [''],
-        zipCode: [''],
+        street: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        city: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        state: new FormControl('', [Validators.required]),
+        country: new FormControl('', [Validators.required]),
+        zipCode: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
       }),
 
       creditCard: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
+        cardType: new FormControl('', [Validators.required]),
+        nameOnCard: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        cardNumber: new FormControl('', [Validators.required, ShopValidators.cardNumberValidator]),
+        securityCode: new FormControl('',  [Validators.required, Validators.pattern(/^\d{3,4}$/)]),
         experationMonth: [''],
         expirationYear: [''],
       }),
@@ -123,6 +120,52 @@ export class CheckoutComponent implements OnInit {
   }
   get email() {
     return this.checkoutFormGrup.get('customer.email');
+  }
+
+  get shippingAddressStreet() {
+    return this.checkoutFormGrup.get('shippingAddress.street');
+  }
+  get shippingAddressCity() {
+    return this.checkoutFormGrup.get('shippingAddress.city');
+  }
+  get shippingAddressState() {
+    return this.checkoutFormGrup.get('shippingAddress.state');
+  }
+  get shippingAddressCountry() {
+    return this.checkoutFormGrup.get('shippingAddress.country');
+  }
+  get shippingAddressZipCode() {
+    return this.checkoutFormGrup.get('shippingAddress.zipCode');
+  }
+
+  get billingAddressStreet() {
+    return this.checkoutFormGrup.get('billingAddress.street');
+  }
+  get billingAddressCity() {
+    return this.checkoutFormGrup.get('billingAddress.city');
+  }
+  get billingAddressState() {
+    return this.checkoutFormGrup.get('billingAddress.state');
+  }
+  get billingAddressCountry() {
+    return this.checkoutFormGrup.get('billingAddress.country');
+  }
+  get billingAddressZipCode() {
+    return this.checkoutFormGrup.get('billingAddress.zipCode');
+  }
+
+
+  get creditCardType() {
+    return this.checkoutFormGrup.get('creditCard.cardType');
+  }
+  get creditCardNameOnCard() {
+    return this.checkoutFormGrup.get('creditCard.nameOnCard');
+  }
+  get creditCardNumber() {
+    return this.checkoutFormGrup.get('creditCard.cardNumber');
+  }
+  get creditCardSecurityCode() {
+    return this.checkoutFormGrup.get('creditCard.securityCode');
   }
 
   copyShippingAddressToBillingAddress(event: Event) {
@@ -192,6 +235,44 @@ export class CheckoutComponent implements OnInit {
       formGroup!.get('state')!.setValue(data[0])
     }
     );
+  }
+
+  //para detectar os cleintes financeiros dso cartões
+
+  /*Análise do Código Atual
+  Seu método detectCardType atualiza o tipo de cartão com base no número inserido, mas não parece exibir mensagens de erro. Ele apenas define o valor do tipo de cartão com base no prefixo detectado. Aqui estão os pontos principais para verificar:
+
+  Remoção de Espaços: cleanedCardNumber remove espaços corretamente, o que é bom.
+
+  Detecção do Tipo de Cartão:
+
+  Visa: Detecta se o número começa com '4'.
+  MasterCard: Detecta se os dois primeiros dígitos estão no intervalo correto ou estão dentro do novo intervalo.
+  American Express: Detecta se os dois primeiros dígitos são '34' ou '37'.
+  Comprimento do Número: Só faz a detecção se o comprimento for de pelo menos 13 dígitos. Se for menor, o tipo é limpo. */
+  detectCardType(): void {
+    this.checkoutFormGrup.get('creditCardNumber.cardNumber')?.valueChanges.subscribe((cardNumber) => {
+      const cleanedCardNumber = cardNumber.replace(/\s+/g, ''); // Remove espaços
+      const firstDigit = cleanedCardNumber.charAt(0);
+      const firstTwoDigits = cleanedCardNumber.substring(0, 2);
+      let cardType = this.checkoutFormGrup.get('creditCardNumber.cardType');
+
+      if (cleanedCardNumber.length >= 13 && cleanedCardNumber.length <= 19) {
+        if (firstDigit === '4') {
+          cardType?.setValue('Visa');
+
+        } else if (firstTwoDigits >= '51' && firstTwoDigits <= '55' || (firstTwoDigits >= '2221' && firstTwoDigits <= '2720')) {
+          cardType?.setValue('MasterCard');
+
+        } else if (firstTwoDigits === '34' || firstTwoDigits === '37') {
+          cardType?.setValue('American Express');
+        } else {
+          cardType?.setValue('Unknown');
+        }
+      } else {
+        cardType?.setValue(''); // Clear the card type if the number is too short
+      }
+    });
   }
 
 }
