@@ -11,16 +11,12 @@ export class ShopValidators {
     return null;
   }
 
-  // Validador para o formato do número do cartão
-  static cardNumberValidator(control: FormControl): ValidationErrors | null {
-    const value = control.value.replace(/\s+/g, ''); // Remove espaços
 
-    // Verifica o comprimento e formato do número do cartão
+  static cardNumberValidator(control: FormControl): ValidationErrors | null {
+    const value = control.value.replace(/\s+/g, ''); /
     if (!/^\d{13,19}$/.test(value)) {
       return { invalidCardNumber: true };
     }
-
-    // Verifica o número do cartão usando Luhn
     const luhnValidation = ShopValidators.luhnCheck(value);
     return luhnValidation ? { invalidCardNumber: true } : null;
   }
@@ -29,31 +25,26 @@ export class ShopValidators {
     static luhnCheck(control: FormControl): ValidationErrors | null {
     const value = control.value;
 
-    // Verifica se o valor é uma string não vazia
     if (value && typeof value === 'string') {
       let sum = 0;
       let shouldDouble = false;
 
-      // Itera pelos dígitos do número do cartão, do final para o início
       for (let i = value.length - 1; i >= 0; --i) {
         let digit = parseInt(value.charAt(i), 10);
 
-        // Dobra o dígito se necessário e ajusta o valor
         if (shouldDouble) {
           if ((digit *= 2) > 9) digit -= 9;
         }
 
-        // Acumula o valor ajustado na soma
         sum += digit;
-        shouldDouble = !shouldDouble; // Alterna o estado de dobrar o dígito
+        shouldDouble = !shouldDouble; 
       }
 
-      // Retorna erro se a soma não for múltiplo de 10
       if (sum % 10 !== 0) {
         return { luhnCheck: true };
       }
     }
 
-    return null; // Retorna null se o número do cartão for válido
+    return null;
   }
 }
