@@ -237,19 +237,6 @@ export class CheckoutComponent implements OnInit {
     );
   }
 
-  //para detectar os cleintes financeiros dso cartões
-
-  /*Análise do Código Atual
-  Seu método detectCardType atualiza o tipo de cartão com base no número inserido, mas não parece exibir mensagens de erro. Ele apenas define o valor do tipo de cartão com base no prefixo detectado. Aqui estão os pontos principais para verificar:
-
-  Remoção de Espaços: cleanedCardNumber remove espaços corretamente, o que é bom.
-
-  Detecção do Tipo de Cartão:
-
-  Visa: Detecta se o número começa com '4'.
-  MasterCard: Detecta se os dois primeiros dígitos estão no intervalo correto ou estão dentro do novo intervalo.
-  American Express: Detecta se os dois primeiros dígitos são '34' ou '37'.
-  Comprimento do Número: Só faz a detecção se o comprimento for de pelo menos 13 dígitos. Se for menor, o tipo é limpo. */
   detectCardType(): void {
     this.checkoutFormGrup.get('creditCardNumber.cardNumber')?.valueChanges.subscribe((cardNumber) => {
       const cleanedCardNumber = cardNumber.replace(/\s+/g, ''); // Remove espaços
