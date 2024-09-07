@@ -9,7 +9,7 @@ O Projeto Ecommerce FullStack Angular and Spring Boot
 
 ## Tecnologias utilizadas Frontend
 -Angular
--BootSStrap
+-BootStrap
 -Typescript
 
 ## Tecnologias utilizadas Backend
