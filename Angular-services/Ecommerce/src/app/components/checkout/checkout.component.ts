@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { first } from 'rxjs';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
+import { CartService } from 'src/app/service/cart.service';
 import { ShopValidators } from 'src/app/validators/shop-validators';
 
 @Component({
@@ -26,10 +27,30 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
-  constructor(private formBuilder: FormBuilder, private shopFormService: ShopFormService) { }
+  constructor(private formBuilder: FormBuilder, private shopFormService: ShopFormService,
+    private cartService: CartService
+  ) { }
 
   ngOnInit(): void {
+
+    this.reviewCartDetails();
+
     this.formsEvent();
+  }
+
+  reviewCartDetails() {
+
+
+      //subscribe to cartService.totalQuantity
+      this.cartService.totalQuantity.subscribe(
+        totalQuantity => this.totalQuantity = totalQuantity
+      )
+
+      //subscribe to cartService.totalPrice
+      this.cartService.totalPrice.subscribe(
+        totalPrice => this.totalPrice = totalPrice
+      )
+
   }
 
   formsEvent() {
