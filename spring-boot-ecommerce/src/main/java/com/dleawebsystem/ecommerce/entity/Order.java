@@ -66,9 +66,3 @@ public class Order {
         item.setOrder(this);
     }
 }
-
-/*O que é this?
-this é uma palavra-chave em Java que refere-se à instância atual da classe.
-Dentro de um método de uma classe, this é utilizado para se referir ao objeto atual da classe.
-No método add, this se refere ao objeto da classe onde o método está sendo chamado. Portanto, item.setOrder(this) configura o item (OrderItem) para ter uma
-referência ao objeto atual (Order).*/
