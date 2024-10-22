@@ -17,6 +17,7 @@ import { Purchase } from 'src/app/common/purchase';
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
 })
+
 export class CheckoutComponent implements OnInit {
 
   checkoutFormGroup!: FormGroup;
@@ -162,14 +163,14 @@ export class CheckoutComponent implements OnInit {
 
     // populate purchase - shipping address
     purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
-    const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
+    const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state)!);
     const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
     purchase.shippingAddress.state = shippingState.name;
     purchase.shippingAddress.country = shippingCountry.name;
 
     // populate purchase - billing address
     purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
-    const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
+    const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state)!);
     const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
     purchase.billingAddress.state = billingState.name;
     purchase.billingAddress.country = billingCountry.name;
@@ -189,6 +190,7 @@ export class CheckoutComponent implements OnInit {
       },
       error: err => {
         alert(`There was an error: ${err.message}`);
+        console.log(err)
       }
     }
     );

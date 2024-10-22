@@ -1,0 +1,24 @@
+<div class="container d-flex align-items-center min-vh-100">
+  <div class="row justify-content-center mx-auto">
+    <div class="col-md-12 login">
+      <h2 class="text-center">Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label for="email" class="form-label">Usuário</label>
+          <input id="email" formControlName="email" class="form-control" type="text">
+          <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || loginForm.get('email')?.dirty)" class="text-danger">
+            O usuário é obrigatório.
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="password" class="form-label">Senha</label>
+          <input id="password" formControlName="password" class="form-control" type="password">
+          <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)" class="text-danger">
+            A senha é obrigatória.
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>
+      </form>
+    </div>
+  </div>
+</div>

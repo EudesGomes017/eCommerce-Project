@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductCategory } from 'src/app/common/product-category';
+import { AuthService } from 'src/app/service/auth.service';
 import { ProductService } from 'src/app/service/product.service';
 
 
@@ -12,10 +13,14 @@ export class ProductCategoryMenuComponent implements OnInit {
 
   productCategories: ProductCategory[] = [];
 
-  constructor(private productService: ProductService) { }
+  isLoggedIn = false;
+
+  constructor(private productService: ProductService, public authService: AuthService) { }
 
   ngOnInit() {
+
     this.listProductCategories();
+
   }
 
   listProductCategories() {
@@ -27,5 +32,6 @@ export class ProductCategoryMenuComponent implements OnInit {
       }
     );
   }
+
 
 }

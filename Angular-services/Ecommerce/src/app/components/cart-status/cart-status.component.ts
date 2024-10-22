@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/service/auth.service';
 import { CartService } from './../../service/cart.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -10,8 +11,10 @@ export class CartStatusComponent implements OnInit {
 
   totalPrice: number = 0.00;
   totalQuantaty: number = 0;
+  isLoggedIn: boolean = false;
 
-  constructor(private cartService: CartService) { }
+
+  constructor(private cartService: CartService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.updateCartStatus();

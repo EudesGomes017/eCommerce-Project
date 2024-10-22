@@ -7,12 +7,29 @@ import { CartItem } from '../common/cart-item';
   providedIn: 'root',
 })
 export class CartService {
+
   cartItems: CartItem[] = [];
 
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
 
-  constructor() {}
+  //criação do starage
+  //storage: Storage = sessionStorage;
+  storage: Storage = localStorage;
+
+  constructor() {
+
+    //read data from storage
+    let data = JSON.parse(this.storage.getItem('cartItems')!)
+
+    if (data != null) {
+      this.cartItems = data;
+
+      // compute totals based on the data that is read from storage
+      this.computeCartTotals();
+    }
+
+  }
 
   addToCart(theCartItem: CartItem) {
     //check if we already have the item in our cart
@@ -67,6 +84,13 @@ export class CartService {
     this.totalQuantity.next(totalQuantityValue);
 
     this.logCartData(totalPriceValue, totalQuantityValue);
+
+    // persist cart data
+    this.persistCartItems();
+  }
+
+  persistCartItems() {
+    this.storage.setItem('cartItems', JSON.stringify(this.cartItems))
   }
 
   logCartData(totalPriceValue: number, totalQuantityValue: number) {
@@ -222,7 +246,53 @@ Esses métodos são partes essenciais de um sistema de carrinho de compras em An
 
 
 
+-----------------------------------------------------
+1. Criação do Storage
 
+Vamos analisar o trecho de código que você forneceu, que parece ser parte de uma classe em TypeScript, possivelmente em um componente Angular. Esse código se relaciona ao gerenciamento de itens de um carrinho de compras, usando o sessionStorage.
+
+1. Criação do Storage
+typescript
+Copiar código
+storage: Storage = sessionStorage;
+Aqui, você está declarando uma propriedade chamada storage do tipo Storage, e a inicializando com sessionStorage. Isso significa que você usará o sessionStorage para armazenar dados temporariamente durante a sessão do navegador.
+2. Construtor
+typescript
+Copiar código
+constructor() {
+    //read data from storage
+    let data = JSON.parse(this.storage.getItem('cartItems')!)
+O constructor é chamado quando uma instância da classe é criada.
+this.storage.getItem('cartItems')! tenta recuperar os dados armazenados com a chave 'cartItems' do sessionStorage.
+O operador ! indica que você está afirmando que o valor não será null ou undefined, mas é uma boa prática fazer uma verificação posterior, pois getItem pode retornar null se não houver nenhum valor associado à chave.
+JSON.parse(...) tenta converter a string JSON recuperada em um objeto JavaScript.
+3. Verificação e Atribuição de Dados
+typescript
+Copiar código
+if (data != null) {
+    this.cartItems = data;
+
+    // compute totals based on the data that is read from storage
+    this.computeCartTotals();
+}
+Aqui, você verifica se data não é null. Se não for, significa que existem itens no carrinho que foram previamente salvos.
+this.cartItems = data; atribui os dados recuperados à propriedade cartItems da classe.
+this.computeCartTotals(); chama um método (que não está mostrado) que provavelmente calcula os totais do carrinho com base nos itens que foram carregados.
+4. Persistindo Itens do Carrinho
+typescript
+Copiar código
+persistCartItems() {
+    this.storage.setItem('cartItems', JSON.stringify(this.cartItems));
+}
+Este método, persistCartItems, é responsável por salvar os itens do carrinho de volta no sessionStorage.
+JSON.stringify(this.cartItems) converte o objeto cartItems em uma string JSON, que pode ser armazenada.
+this.storage.setItem('cartItems', ...) armazena essa string no sessionStorage sob a chave 'cartItems'.
+Resumo
+O código configura um armazenamento em sessão para gerenciar os itens de um carrinho de compras.
+Ao instanciar a classe, ele tenta recuperar os itens do carrinho armazenados anteriormente e calcular os totais se houver dados.
+O método persistCartItems é utilizado para armazenar o estado atual do carrinho de volta no sessionStorage.
+Essa abordagem ajuda a manter o estado do carrinho de compras do usuário durante a sessão, permitindo que
+ele adicione, remova ou modifique itens, e ainda preserve esses dados mesmo se a página for recarregada.
 
 
  */

@@ -12,15 +12,6 @@
   box-sizing:border-box
 }
 
-body{
-  font-family:Poppins,sans-serif;
-  font-weight:400;
-  font-size:16px;
-  line-height:1.625;
-  color:#666;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale
-}
 
 ul{
   margin:0
@@ -1001,6 +992,7 @@ footer ul li{
       border-radius:0;
       background:#205b8d
   }
+
   input.au-input.au-input-xl{
       border-radius:0!important;
       margin-right:0
@@ -1260,7 +1252,7 @@ section{
 }
 
 .au-input-xl{
-  min-width:935px
+  min-width:100px
 }
 
 input.au-input.au-input-xl{
