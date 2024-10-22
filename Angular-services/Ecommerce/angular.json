@@ -27,6 +27,7 @@
               "node_modules/bootstrap/dist/css/bootstrap-grid.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/fontawesome-free/css/all.css"
+
             ],
             "scripts": []
           },
@@ -67,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "exempleService:build:production"
+              "buildTarget": "exempleService:build:production"
             },
             "development": {
-              "browserTarget": "exempleService:build:development"
+              "buildTarget": "exempleService:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "exempleService:build"
+            "buildTarget": "exempleService:build"
           }
         },
         "test": {
