@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit(): void {
-    const email = this.loginForm.get('email')?.value; // Obtém o email do formulário
+    const email = this.loginForm.get('email')!.value; // Obtém o email do formulário
     const password = this.loginForm.get('password')?.value;
 
     if (this.loginForm.valid) {
@@ -39,7 +39,8 @@ export class LoginComponent implements OnInit {
       };
 
       // Armazena o e-mail no sessionStorage
-      this.storage.setItem('email', JSON.stringify(email));
+      this.storage.setItem('userEmail', JSON.stringify(email));
+
 
 
       this.authService.login(credentials).subscribe(

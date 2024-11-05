@@ -6,7 +6,7 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 
 
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule, Inject, Injector } from '@angular/core';
@@ -24,6 +24,7 @@ import { NavComponent } from "./components/nav/nav.component";
 import { LoginStatusComponent } from "./components/login-status/login-status.component";
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { authGuard } from './auth.guard';
+import { AuthInterceptorService } from './service/auth-interceptor.service';
 
 const routes: Routes = [
   {path: 'order-history', component: OrderHistoryComponent, canActivate: [authGuard]},
@@ -64,5 +65,11 @@ const routes: Routes = [
     NavComponent
 ],
   bootstrap: [AppComponent],
+
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
+  ]
 })
+
+
 export class AppModule {}

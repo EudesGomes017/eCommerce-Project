@@ -32,16 +32,16 @@ export class CartService {
   }
 
   addToCart(theCartItem: CartItem) {
-  
+
     let alreadyExistsInCart: boolean = false;
     let existingCartItem: CartItem | undefined;
-    
+
     existingCartItem = this.cartItems.find(
       (item) => item.id === theCartItem.id
     );
 
     if (this.cartItems.length > 0) {
-     
+
 
       existingCartItem = this.cartItems.find(
         (tempCartItem) => tempCartItem.id === theCartItem.id
@@ -64,7 +64,7 @@ export class CartService {
       this.cartItems.push(theCartItem);
     }
 
-    
+
     this.computeCartTotals();
   }
 
@@ -77,7 +77,7 @@ export class CartService {
       totalQuantityValue += currentCartItem.quantity;
     }
 
-   
+
     this.totalPrice.next(totalPriceValue); // next() envia o evento
     this.totalQuantity.next(totalQuantityValue);
 
@@ -131,7 +131,6 @@ export class CartService {
     }
   }
 }
-<<<<<<< HEAD
 /*Propriedades:
 
 cartItems: Um array (CartItem[]) que guarda os itens atualmente no carrinho.
@@ -295,5 +294,3 @@ ele adicione, remova ou modifique itens, e ainda preserve esses dados mesmo se a
 
 
  */
-=======
->>>>>>> 010f3dec3538cbd5eaf4b03b3a70593f71e34194

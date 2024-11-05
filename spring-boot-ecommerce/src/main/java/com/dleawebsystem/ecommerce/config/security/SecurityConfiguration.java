@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/states").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/states/search/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/orders/search/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/search/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/search/**").permitAll()
