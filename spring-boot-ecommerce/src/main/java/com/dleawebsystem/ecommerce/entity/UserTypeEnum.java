@@ -2,5 +2,6 @@ package com.dleawebsystem.ecommerce.entity;
 
 public enum UserTypeEnum {
 
-    ADMIN;
+    ADMIN,
+    USER;
 }

@@ -33,11 +33,9 @@ public class Users implements UserDetails {
 
     @Column(name = "user_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    public UserTypeEnum userType;
-
+    private UserTypeEnum userType;
 
     public Users() {
-
     }
 
     public Users(String email, String encryptedPassword, UserTypeEnum userType, String name) {
@@ -58,12 +56,15 @@ public class Users implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.userType == userType.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
-                    new SimpleGrantedAuthority("ROLE_ADMIN")
-                    );
+        // Verifica se o usuário é do tipo ADMIN
+        if (this.userType == UserTypeEnum.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER") // Admin também pode ter acesso como USER
+            );
         }
-        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        // Caso contrário, atribui apenas ROLE_USER
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
