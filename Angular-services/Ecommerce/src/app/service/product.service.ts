@@ -4,24 +4,26 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProductCategory } from '../common/product-category';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
 
-  private baseUrl = 'http://localhost:8086/api/products';
+  //private baseUrl = 'http://localhost:8443/api/products';
+  private baseUrl = environment.apiUrl + '/products';
 
-  private categoryUrl = 'http://localhost:8086/api/product-category';
+  private categoryUrl = environment.apiUrl + '/product-category';
   snapshot: any;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
 
-   getProductListPaginate(thePage: number, thePageSize: number, theCategoryId: number): Observable<GetResponseProducts> {
+  getProductListPaginate(thePage: number, thePageSize: number, theCategoryId: number): Observable<GetResponseProducts> {
     // need to build URL based on category id
     const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`
-                        + `&page=${thePage}&size=${thePageSize}`;
+      + `&page=${thePage}&size=${thePageSize}`;
 
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
@@ -30,12 +32,12 @@ export class ProductService {
     thePageSize: number,
     theKeyword: string): Observable<GetResponseProducts> {
 
-// need to build URL based on keyword, page and size
-const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`
-+ `&page=${thePage}&size=${thePageSize}`;
+    // need to build URL based on keyword, page and size
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`
+      + `&page=${thePage}&size=${thePageSize}`;
 
-return this.httpClient.get<GetResponseProducts>(searchUrl);
-}
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
 
   getProductList(theCategoryId: number): Observable<GetResponseProducts> {
     // need to build URL based on category id, page and size
