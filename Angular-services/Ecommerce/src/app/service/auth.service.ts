@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 interface LoginResponse {
   userFullName: string;
@@ -13,7 +14,9 @@ interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8086/api'; // URL do seu back-end
+  //private apiUrl = 'https://localhost:8443/api'; // URL do seu back-end
+
+  private baseUrl = environment.apiUrl;
 
   public isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
@@ -22,7 +25,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: { email: string; password: string }): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, credentials).pipe(
       tap(response => {
         sessionStorage.setItem('token', response.token);
         sessionStorage.setItem('userFullName', response.userFullName); // Armazenando o nome do usuário

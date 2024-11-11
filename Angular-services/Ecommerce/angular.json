@@ -27,7 +27,6 @@
               "node_modules/bootstrap/dist/css/bootstrap-grid.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/fontawesome-free/css/all.css"
-
             ],
             "scripts": []
           },
@@ -66,6 +65,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "exempleService:build:production"

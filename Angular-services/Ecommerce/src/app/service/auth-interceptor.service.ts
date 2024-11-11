@@ -2,6 +2,7 @@ import { AuthService } from 'src/app/service/auth.service';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,13 @@ export class AuthInterceptorService implements HttpInterceptor {
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpRequest<any>> {
     // URLs de endpoints protegidos
+    const theEndpoint = environment.apiUrl + '/orders'
     const securedEndpoints = [
-      'http://localhost:8086/api/orders',
-      'http://localhost:8086/api/orders/search',
-      'http://localhost:8086/api/checkout',
-      'http://localhost:8086/api/orders/search/findByCustomerEmailOrderByDateCreatedDesc'
+      theEndpoint
+      //'https://localhost:8443/api/orders',
+      //'https://localhost:8443/api/orders/search',
+      //'https://localhost:8443/api/checkout',
+      //'https://localhost:8443/api/orders/search/findByCustomerEmailOrderByDateCreatedDesc'
     ];
 
     // Verificar se a URL da requisição está na lista de endpoints protegidos
