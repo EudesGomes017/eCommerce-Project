@@ -1,23 +1,33 @@
 package com.dleawebsystem.ecommerce.service;
 
 import com.dleawebsystem.ecommerce.dao.CustumerRepository;
+import com.dleawebsystem.ecommerce.dto.PaymentInfoDTO;
 import com.dleawebsystem.ecommerce.dto.Purchase;
 import com.dleawebsystem.ecommerce.dto.PurchaseResponse;
 import com.dleawebsystem.ecommerce.entity.Customer;
 import com.dleawebsystem.ecommerce.entity.Order;
 import com.dleawebsystem.ecommerce.entity.OrderItem;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CkeckoutServiceImpl implements CheckoutService {
 
     @Autowired
     private CustumerRepository custumerRepository;
+
+    public CkeckoutServiceImpl(@Value("${stripe.key.secret}") String secretKey) {
+
+        // initialize Stripe API with secret key
+        Stripe.apiKey = secretKey;
+    }
 
     @Override
     @Transactional
@@ -68,4 +78,44 @@ public class CkeckoutServiceImpl implements CheckoutService {
 
         return UUID.randomUUID().toString();
     }
+
+
+    @Override
+    public PaymentIntent createPaymentInent(PaymentInfoDTO paymenteInfo) throws StripeException {
+        List<String> paymentMethodTypes = new ArrayList<>();
+        paymentMethodTypes.add("card");
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("amount", paymenteInfo.getAmount());
+        params.put("currency", paymenteInfo.getCurrency());
+        params.put("payment_method)types", paymentMethodTypes);
+
+
+        return PaymentIntent.create(params);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
