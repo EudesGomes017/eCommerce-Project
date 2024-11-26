@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/search/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/search/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/checkout/paymentintent").permitAll()
                         /*.requestMatchers("/api/user/**").hasRole("USER")*/
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated() // quando for as outros roles só vai autenticar

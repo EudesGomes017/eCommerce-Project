@@ -21,9 +21,13 @@
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@okta/okta-auth-js": "^7.8.0",
     "@popperjs/core": "^2.11.8",
+    "@stripe/stripe-js": "^5.2.0",
     "bootstrap": "^5.3.3",
     "fontawesome-free": "^1.0.4",
     "rxjs": "^7.8.0",
+    "stri": "^1.0.293",
+    "strip": "^3.0.0",
+    "stripe": "^8.179.0",
     "tslib": "^2.5.0",
     "zone.js": "^0.14.0"
   },
