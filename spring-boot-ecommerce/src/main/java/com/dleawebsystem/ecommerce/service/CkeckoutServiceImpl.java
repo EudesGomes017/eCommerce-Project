@@ -81,18 +81,23 @@ public class CkeckoutServiceImpl implements CheckoutService {
 
 
     @Override
-    public PaymentIntent createPaymentInent(PaymentInfoDTO paymenteInfo) throws StripeException {
+    public PaymentIntent createPaymentInent(PaymentInfoDTO paymentInfo) throws StripeException {
+        // Lista de tipos de método de pagamento (no caso, "card" para cartão de crédito)
         List<String> paymentMethodTypes = new ArrayList<>();
         paymentMethodTypes.add("card");
 
+        // Mapa de parâmetros para criar o PaymentIntent
         Map<String, Object> params = new HashMap<>();
-        params.put("amount", paymenteInfo.getAmount());
-        params.put("currency", paymenteInfo.getCurrency());
-        params.put("payment_method)types", paymentMethodTypes);
+        params.put("amount", paymentInfo.getAmount());  // Valor da transação
+        params.put("currency", paymentInfo.getCurrency());  // Moeda da transação
+        params.put("payment_method_types", paymentMethodTypes);  // Tipos de método de pagamento
+        params.put("description", "DLEA PURCHASE");
+        params.put("receipt_email", paymentInfo.getReceiptEmail());
 
-
+        // Cria o PaymentIntent utilizando os parâmetros e retorna o resultado
         return PaymentIntent.create(params);
     }
+
 }
 
 

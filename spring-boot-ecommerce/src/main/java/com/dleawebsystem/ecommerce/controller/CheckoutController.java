@@ -26,7 +26,7 @@ public class CheckoutController {
         return purchaseResponse;
     }
 
-    @PostMapping("/payment-intent")
+    @PostMapping("/paymentintent")
     public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfoDTO paymentInfoDTO) throws StripeException {
 
         PaymentIntent paymentIntent = checkoutService.createPaymentInent(paymentInfoDTO);
